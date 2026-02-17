@@ -56,6 +56,16 @@ DLConfig.TEMP_DIR.mkdir(exist_ok=True)
 
 executor = ThreadPoolExecutor(max_workers=DLConfig.EXECUTOR_WORKERS)
 
+def clean_temp_dir(temp_id: str):
+    temp_dir = DLConfig.TEMP_DIR / temp_id
+    if temp_dir.exists():
+        for f in temp_dir.iterdir():
+            clean_download(str(f))
+        try:
+            temp_dir.rmdir()
+        except Exception as e:
+            logger.error(f"clean_temp_dir rmdir error for {temp_dir}: {e}")
+
 def sanitize_filename(title: str) -> str:
     title = re.sub(r'[<>:"/\\|?*]', '', title[:100])
     title = re.sub(r'\s+', '_', title.strip())
@@ -121,11 +131,9 @@ def youtube_parser(url: str) -> Optional[str]:
         if match:
             video_id = match.group(1)
             if "shorts" in url.lower():
-                standardized_url = f"https://www.youtube.com/shorts/{video_id}"
-                return standardized_url
+                return f"https://www.youtube.com/shorts/{video_id}"
             else:
-                standardized_url = f"https://www.youtube.com/watch?v={video_id}"
-                return standardized_url
+                return f"https://www.youtube.com/watch?v={video_id}"
 
     return None
 
@@ -152,12 +160,16 @@ def get_ydl_opts(output_path: str, is_audio: bool = False) -> dict:
         'socket_timeout': DLConfig.SOCKET_TIMEOUT,
         'retries': DLConfig.RETRIES,
         'concurrent_fragment_downloads': 5,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['web', 'android'],
+            }
+        },
+        'remote_components': 'ejs:github',
     }
     if is_audio:
         base.update({
-            'format': 'bestaudio[abr>=320]/bestaudio/best',
-            'extractaudio': True,
-            'audioformat': 'mp3',
+            'format': 'bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio/best',
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
@@ -166,7 +178,7 @@ def get_ydl_opts(output_path: str, is_audio: bool = False) -> dict:
         })
     else:
         base.update({
-            'format': f'bestvideo[height<={height}][ext=mp4]+bestaudio[abr>=192]/bestvideo[height<={height}]+bestaudio/best[height<={height}]/best',
+            'format': f'bestvideo[height<={height}][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<={height}]+bestaudio/bestvideo[height<={height}]/best[height<={height}]/best',
             'merge_output_format': 'mp4',
             'postprocessors': [{
                 'key': 'FFmpegVideoConvertor',
@@ -192,12 +204,12 @@ async def fetch_video_metadata(video_id: str) -> Optional[dict]:
 async def download_thumbnail(video_id: str, output_path: str) -> Optional[str]:
     if not video_id:
         return None
-    
+
     thumbnail_urls = [
         f"https://i.ytimg.com/vi/{video_id}/maxresdefault.jpg",
         f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
     ]
-    
+
     try:
         connector = aiohttp.TCPConnector(limit=10, ttl_dns_cache=300)
         timeout = aiohttp.ClientTimeout(total=30, connect=10)
@@ -207,7 +219,6 @@ async def download_thumbnail(video_id: str, output_path: str) -> Optional[str]:
                     async with session.get(thumbnail_url) as resp:
                         if resp.status == 200:
                             data = await resp.read()
-                            
                             thumbnail_path = f"{output_path}_thumb.jpg"
                             loop = asyncio.get_event_loop()
                             await loop.run_in_executor(
@@ -217,10 +228,13 @@ async def download_thumbnail(video_id: str, output_path: str) -> Optional[str]:
                             return thumbnail_path
                 except:
                     continue
-        
         return None
     except Exception as e:
         return None
+
+def _run_ydl_download(opts: dict, url: str):
+    with yt_dlp.YoutubeDL(opts) as ydl:
+        ydl.download([url])
 
 async def download_media_file(url: str, is_audio: bool, temp_id: str) -> Optional[str]:
     temp_dir = DLConfig.TEMP_DIR / temp_id
@@ -230,25 +244,22 @@ async def download_media_file(url: str, is_audio: bool, temp_id: str) -> Optiona
     opts = get_ydl_opts(output_path, is_audio)
 
     try:
-        with yt_dlp.YoutubeDL(opts) as ydl:
-            await asyncio.get_event_loop().run_in_executor(executor, ydl.download, [url])
+        await asyncio.get_event_loop().run_in_executor(executor, _run_ydl_download, opts, url)
 
         expected_ext = 'mp3' if is_audio else 'mp4'
         file_path = f"{output_path}.{expected_ext}"
 
         if not os.path.exists(file_path):
-            for ext in ['.mp3', '.m4a', '.webm', '.mkv', '.mp4']:
+            search_exts = ['.mp3', '.m4a', '.webm', '.mkv', '.mp4'] if is_audio else ['.mp4', '.mkv', '.webm', '.m4a', '.mp3']
+            for ext in search_exts:
                 alt_path = f"{output_path}{ext}"
                 if os.path.exists(alt_path):
-                    if ext == expected_ext or (is_audio and ext in ['.mp3', '.m4a']):
-                        file_path = alt_path
-                        break
-                    else:
-                        file_path = alt_path
-                        break
+                    file_path = alt_path
+                    break
 
         return file_path if os.path.exists(file_path) else None
     except Exception as e:
+        logger.error(f"Download error: {e}")
         return None
 
 async def download_media(url: str, is_audio: bool, status: Message, bot: Bot) -> Tuple[Optional[dict], Optional[str]]:
@@ -307,9 +318,8 @@ async def download_media(url: str, is_audio: bool, status: Message, bot: Bot) ->
         file_size = os.path.getsize(file_path)
         if file_size > DLConfig.MAX_VIDEO_SIZE:
             logger.info(f"Removing {'MP3' if is_audio else 'video'} file at path: {file_path}")
-            await asyncio.get_event_loop().run_in_executor(executor, clean_download, file_path)
+            await asyncio.get_event_loop().run_in_executor(executor, clean_temp_dir, temp_id)
             logger.info(f"Successfully removed {'MP3' if is_audio else 'video'} file: {file_path}")
-            logger.info(f"Cleaning Download: {DLConfig.TEMP_DIR / temp_id}/")
             await status.edit_text(f"<b>Sorry Bro {'Audio' if is_audio else 'Video'} Is Over 2GB</b>", parse_mode=ParseMode.HTML)
             await Smart_Notify(bot, f"{BotCommands}yt", Exception("File size exceeds 2GB"), status)
             return None, "File exceeds 2GB"
@@ -451,14 +461,14 @@ async def handle_media_request(message: Message, bot: Bot, query: str, is_audio:
         await status.edit_text("<b>Sorry Bro YouTubeDL API Dead</b>", parse_mode=ParseMode.HTML)
         await Smart_Notify(bot, f"{BotCommands}yt", e, message)
         logger.info(f"Cleaning Download: {DLConfig.TEMP_DIR / result['temp_id']}/")
-        await asyncio.get_event_loop().run_in_executor(executor, clean_download, str(DLConfig.TEMP_DIR / result['temp_id']))
+        await asyncio.get_event_loop().run_in_executor(executor, clean_temp_dir, result['temp_id'])
         return
 
     logger.info(f"Removing {'MP3' if is_audio else 'video'} file at path: {result['file_path']}")
     if result['thumbnail_path']:
         logger.info(f"Cleaning Download: {result['thumbnail_path']}")
     logger.info(f"Cleaning Download: {DLConfig.TEMP_DIR / result['temp_id']}/")
-    await asyncio.get_event_loop().run_in_executor(executor, clean_download, str(DLConfig.TEMP_DIR / result['temp_id']))
+    await asyncio.get_event_loop().run_in_executor(executor, clean_temp_dir, result['temp_id'])
     logger.info(f"Successfully removed {'MP3' if is_audio else 'video'} file: {result['file_path']}")
 
 @dp.message(Command(commands=["yt", "video", "mp4"], prefix=BotCommands))
