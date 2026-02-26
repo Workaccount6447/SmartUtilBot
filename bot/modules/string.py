@@ -417,7 +417,8 @@ async def generate_session(bot: Bot, message: Message):
         "<b>━━━━━━━━━━━━━━━━━━━━━━━━</b>\n"
         f"<code>{string_session}</code>\n"
         "<b>━━━━━━━━━━━━━━━━━━━━━━━━</b>\n"
-        "<b>⚠️ Warn: </b> Using the session for policy-violating activities may result in your Telegram account getting banned or deleted."
+        "<b>⚠️ Warn: </b> Using the session for policy-violating activities may result in your Telegram account getting banned or deleted.<\n>"
+        "<b> Notice <\b> if you remove the bot access from your account the string stops work."
     )
     try:
         if telethon:
