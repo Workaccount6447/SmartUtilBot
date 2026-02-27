@@ -20,7 +20,6 @@ pydub
 moviepy
 speedtest-cli
 py-yt-search
-lxml
 smartfaker
 qrcode
 reportlab
