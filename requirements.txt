@@ -1,7 +1,6 @@
 pyrofork==2.3.68
 tgcrypto
 aiogram
-google-genai
 aiohttp
 telethon
 cryptg
