@@ -9,7 +9,6 @@ pytz
 telegraph
 pycountry
 beautifulsoup4
-Pillow
 yt-dlp
 python-dateutil
 motor
