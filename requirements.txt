@@ -22,7 +22,6 @@ speedtest-cli
 py-yt-search
 lxml
 smartfaker
-smartbindb
 qrcode
 reportlab
 pypdf
