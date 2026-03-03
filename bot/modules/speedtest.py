@@ -91,14 +91,14 @@ async def run_speedtest_task(bot: Bot, chat_id: int, status_message_id: int):
         return
 
     response_text = (
-        "<b>Smart Speedtest Check → Successful ✅</b>\n"
+        "<b>Royal Speedtest Check → Successful ✅</b>\n"
         "<b>━━━━━━━━━━━━━━━━━</b>\n"
         f"<b>⊗ Download:</b> <b>{speed_convert(result['download'])}</b>\n"
         f"<b>⊗ Upload:</b> <b>{speed_convert(result['upload'])}</b>\n"
         f"<b>⊗ Ping:</b> <b>{result['ping']:.2f} ms</b>\n"
         f"<b>⊗ Internet Provider:</b> <b>{result['client']['isp']}</b>\n"
         "<b>━━━━━━━━━━━━━━━━━</b>\n"
-        "<b>Smart SpeedTester → Activated ✅</b>"
+        "<b>Royal SpeedTester → Activated ✅</b>"
     )
 
     buttons = SmartButtons()
@@ -146,4 +146,5 @@ async def speedtest_handler(message: Message, bot: Bot):
             chat_id=message.chat.id,
             text="<b>❌ Failed to initiate speedtest!</b>",
             parse_mode=SmartParseMode.HTML
+
         )
