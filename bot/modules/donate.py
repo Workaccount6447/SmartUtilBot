@@ -22,10 +22,11 @@ from bot.helpers.defend import SmartDefender
 from config import OWNER_ID, DEVELOPER_USER_ID
 
 DONATION_OPTIONS_TEXT = """
-<b>Why support Smart Util?</b>
+<b>Why support Royality Bots?</b>
 <b>━━━━━━━━━━━━━━━━━━</b>
 🌟 <b>Love the service?</b>
 Your support helps keep <b>SmartUtil</b> fast, reliable, and free for everyone.
+It helps us t be motivate for making new projects .
 Even a small <b>Gift or Donation</b> makes a big difference! 💖
 
 👇 <b>Choose an amount to contribute:</b>
@@ -358,3 +359,4 @@ async def process_successful_payment(message: Message, bot: Bot):
             parse_mode=ParseMode.HTML,
             reply_markup=support_markup
         )
+
