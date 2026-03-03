@@ -253,7 +253,7 @@ async def process_broadcast(client: Client, content: Message, is_broadcast: bool
         summary_msg = await send_message(
             chat_id=chat_id,
             text=(
-                f"<b>Smart Broadcast Successful ✅</b>\n"
+                f"<b>Royal Broadcast Successful ✅</b>\n"
                 f"<b>━━━━━━━━━━━━━━━━━</b>\n"
                 f"<b>⊗ To Users: {successful_users} Users</b>\n"
                 f"<b>⊗ Blocked Users: {blocked_users} Users</b>\n"
@@ -294,7 +294,7 @@ async def stats_handler(message: Message, bot: Bot):
         await send_message(
             chat_id=message.chat.id,
             text=(
-                f"<b>Smart Bot Status ⇾ Report ✅</b>\n"
+                f"<b>Royal Tools Bot Status ⇾ Report ✅</b>\n"
                 f"<b>━━━━━━━━━━━━━━━━</b>\n"
                 f"<b>Users & Groups Engagements:</b>\n"
                 f"<b>1 Day:</b> {daily_users} users were active\n"
@@ -303,7 +303,7 @@ async def stats_handler(message: Message, bot: Bot):
                 f"<b>1 Year:</b> {yearly_users} users were active\n"
                 f"<b>Total Connected Groups:</b> {total_groups}\n"
                 f"<b>━━━━━━━━━━━━━━━━</b>\n"
-                f"<b>Total Smart Tools Users:</b> {total_users} ✅"
+                f"<b>Total Royal Tools Users:</b> {total_users} ✅"
             ),
             parse_mode=SmartParseMode.HTML,
             reply_markup=keyboard
