@@ -13,8 +13,8 @@ from bot.helpers.logger import LOGGER
 from bot.helpers.defend import SmartDefender
 
 privacy_text = (
-    "<b>📜 Privacy Policy for Smart Util Bot</b>\n\n"
-    "Welcome to <b>Smart Util Bot</b>. By using our services, you agree to this privacy policy.\n\n"
+    "<b>📜 Privacy Policy for Royal Tools Robot</b>\n\n"
+    "Welcome to <b>Royal Tools Robot</b>. By using our services, you agree to this privacy policy.\n\n"
     "1. <b>Information We Collect:</b>\n"
     " - <b>Personal Information:</b> User ID and username for personalization.\n"
     " - <b>Usage Data:</b> Information on how you use the app to improve our services.\n\n"
@@ -26,7 +26,7 @@ privacy_text = (
     "3. <b>Data Security:</b>\n"
     " - These tools do not store any data, ensuring your privacy.\n"
     " - We use strong security measures, although no system is 100% secure.\n\n"
-    "Thank you for using <b>Smart Util Bot</b>. We prioritize your privacy and security."
+    "Thank you for using <b>Royality Tools Robot</b>. We prioritize your privacy and security."
 )
 
 @dp.message(Command(commands=["privacy"], prefix=BotCommands))
@@ -54,4 +54,5 @@ async def handle_close_privacy_callback(callback_query: CallbackQuery, bot: Bot)
         await callback_query.message.delete()
         LOGGER.info(f"Successfully deleted privacy message for user {callback_query.from_user.id} in chat {callback_query.message.chat.id}")
     except Exception as e:
+
         LOGGER.error(f"Failed to delete privacy message for user {callback_query.from_user.id} in chat {callback_query.message.chat.id}: {e}")
