@@ -38,7 +38,7 @@ async def get_conversion_data(base_coin: str, target_coin: str, amount: float):
         
 def format_response(data: dict) -> str:
     return (
-        "<b>Smart Binance Convert Successful ✅</b>\n"
+        "<b>Royal Binance Convert Successful ✅</b>\n"
         "<b>━━━━━━━━━━━━━━━━</b>\n"
         f"<b>Base Coin:</b> {data['base_coin']}\n"
         f"<b>Target Coin:</b> {data['target_coin']}\n"
@@ -108,4 +108,5 @@ async def coin_handler(message: Message, bot: Bot):
             parse_mode=ParseMode.HTML
         )
         LOGGER.error(f"Error processing /cx for {base_coin} to {target_coin} in chat {message.chat.id}: {e}")
+
         await Smart_Notify(bot, "/cx", e, message)
