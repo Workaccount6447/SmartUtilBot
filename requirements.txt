@@ -16,7 +16,6 @@ psutil
 pydub
 speedtest-cli
 py-yt-search
-smartfaker
 qrcode
 reportlab
 pypdf
