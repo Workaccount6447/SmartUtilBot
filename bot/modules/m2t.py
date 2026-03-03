@@ -163,7 +163,7 @@ async def message_to_text_handler(message: Message, bot: Bot):
             f"<b>Lines:</b> <code>{total_lines}</code>\n"
             f"<b>Characters:</b> <code>{total_chars}</code>\n"
             f"<b>━━━━━━━━━━━━━━</b>\n"
-            f"<b>Thanks For Using SmartUtilBot 🤖</b>"
+            f"<b>Thanks For Using RoaylToolsRobot🤖</b>"
         )
         
         await bot.send_document(
