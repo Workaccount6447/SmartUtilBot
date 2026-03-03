@@ -44,11 +44,11 @@ async def start_command_handler(message: Message, bot: Bot):
         response_text = (
             f"<b>Hi {full_name}! Welcome To This Bot</b>\n"
             "<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
-            "<b>Smart Util</b> is your ultimate toolkit on Telegram, packed with AI tools, "
+            "<b>Royal Tools</b> is your ultimate toolkit on Telegram, packed with AI tools, "
             "educational resources, downloaders, temp mail, crypto utilities, and more. "
             "Simplify your tasks with ease!\n"
             "<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
-            f"<b>Don't forget to <a href='{UPDATE_CHANNEL_URL}'>join here</a> for updates!</b>"
+            f"<b> Made By: @RoyalityBots</b>"
         )
     else:
         group_name = message.chat.title or "this group"
@@ -63,21 +63,21 @@ async def start_command_handler(message: Message, bot: Bot):
             response_text = (
                 f"<b>Hi {full_name}! Welcome To This Bot</b>\n"
                 "<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
-                "<b>Smart Util</b> is your ultimate toolkit on Telegram, packed with AI tools, "
+                "<b>Royal Tools</b> is your ultimate toolkit on Telegram, packed with AI tools, "
                 "educational resources, downloaders, temp mail, crypto utilities, and more. "
                 "Simplify your tasks with ease!\n"
                 "<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
-                f"<b>Don't forget to <a href='{UPDATE_CHANNEL_URL}'>join here</a> for updates!</b>"
+                f"<b>Powered by: @RoyalityBots</b>"
             )
         else:
             response_text = (
                 f"<b>Hi {group_name}! Welcome To This Bot</b>\n"
                 "<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
-                "<b>Smart Util</b> is your ultimate toolkit on Telegram, packed with AI tools, "
+                "<b>Royal Tools</b> is your ultimate toolkit on Telegram, packed with AI tools, "
                 "educational resources, downloaders, temp mail, crypto utilities, and more. "
                 "Simplify your tasks with ease!\n"
                 "<b>━━━━━━━━━━━━━━━━━━━━━</b>\n"
-                f"<b>Don't forget to <a href='{UPDATE_CHANNEL_URL}'>join here</a> for updates!</b>"
+                f"<b> Maded by: @RoyalityBots</b>"
             )
     
     await send_message(
