@@ -139,7 +139,7 @@ async def cpdf_handler(message: Message, bot: Bot):
         reply_markup = buttons.build_menu(b_cols=1)
         
         initial_text = (
-            "<b>Smart PDF Compressor By SmartDev</b>\n"
+            "<b>Smart PDF Compressor By Royality Bots</b>\n"
             "<b>━━━━━━━━━━━━━━━━━━━━━━</b>\n"
             "<b>📤 Send me a PDF file to compress</b>\n\n"
             "<b>⚙️ Available Options:</b>\n"
@@ -327,7 +327,7 @@ async def handle_cpdf_callback(callback: CallbackQuery, bot: Bot):
             f"<b>📉 Reduction:</b> <code>{reduction:.1f}%</code>\n"
             f"<b>⚙️ Quality:</b> <code>{quality_text}</code>\n"
             "<b>━━━━━━━━━━━━━━━━━━</b>\n"
-            "<b>Thank You For Using Our Smart Bot</b>"
+            "<b>Thank You For Using Our Royal Tools</b>"
         )
         
         await SmartPyro.send_document(
