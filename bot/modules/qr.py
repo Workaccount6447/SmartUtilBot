@@ -62,14 +62,14 @@ def set_data(user_id: int, data: Dict):
 
 def get_initial_message() -> str:
     return (
-        "<b>📱 QR Code Generator</b>\n"
+        "<b>📱 QR Code Generator by RoyalityBots</b>\n"
         "<b>━━━━━━━━━━━━━━━━━━━━━━</b>\n"
         "Send me the data you'd like to convert into a QR code.\n\n"
         "<b>✅ Supported Formats:</b>\n"
         "• Plain text\n"
-        "• Website URLs → <code>https://example.com</code>\n"
+        "• Website URLs → <code>https://t.me/RoyalityBots</code>\n"
         "• Phone numbers → <code>tel:+1234567890</code>\n"
-        "• Email addresses → <code>mailto:email@example.com</code>\n"
+        "• Email addresses → <code>mailto:example@domain.com</code>\n"
         "• WiFi credentials → <code>WIFI:T:WPA;S:NetworkName;P:Password;;</code>\n"
         "• SMS messages → <code>smsto:+1234567890:Your message</code>\n"
         "• vCard contact info\n\n"
